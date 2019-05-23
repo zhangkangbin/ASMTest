@@ -1,0 +1,29 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.android.tools.build:gradle:3.4.0'
+
+}
+group='com.asmtest'
+version='1.0.1'
+archivesBaseName='kang-asm-test'
+uploadArchives {
+
+    repositories {
+        mavenDeployer {
+            repository(url: uri('../repo'))
+            pom.artifactId = archivesBaseName
+        }
+    }
+
+}
