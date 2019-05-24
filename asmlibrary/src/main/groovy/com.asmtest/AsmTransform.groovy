@@ -13,6 +13,7 @@ import org.objectweb.asm.AnnotationVisitor
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.ClassWriter
+import org.objectweb.asm.FieldVisitor
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
@@ -173,28 +174,49 @@ public class AsmTransform extends Transform {
 
         }
         def isFind = false
-
+        private boolean isFieldPresent;
         @Override
         MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 
-/*
 
-            if (name.equals("remove")) {
+           /* if (name.equals("remove") || name.equals("remove2")) {
                 isFind = true
+                //返回空可移除一个方法
                 return null
             }
 */
 
-
             MethodVisitor methodVisitor = super.visitMethod(access, name, desc, signature, exceptions)
             MyAdviceAdapter myAdviceAdapter = new MyAdviceAdapter(Opcodes.ASM5, methodVisitor, access, name, desc)
+            println("-------visitMethod--------" + name + myAdviceAdapter.getIsFind())
 
-            if (myAdviceAdapter.isFind) {
-                //返回空，移除这个方法
-                return null
-            }
-            //   println("-------visitMethod--------" +desc+ myAdviceAdapter.isFind)
             return myAdviceAdapter
+        }
+
+        @Override
+        FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
+
+            if (name.equals("_start")) {
+                isFieldPresent = true;
+            }
+
+            return super.visitField(access, name, desc, signature, value)
+        }
+
+        @Override
+        void visitEnd() {
+
+            if(!isFieldPresent){
+                isFind = true
+                println("-----------------------------添加一个字段-----visitEnd-------------------:"+Type.getDescriptor(String.class) )
+                //添加一个字段
+                FieldVisitor fieldVisitor = cv.visitField(0,"_start",Type.getDescriptor(String.class),null,null)
+                fieldVisitor.visitEnd()
+            }
+
+
+
+            super.visitEnd()
         }
 
         @Override
@@ -211,13 +233,12 @@ public class AsmTransform extends Transform {
     }
 
     class MyAdviceAdapter extends AdviceAdapter {
-
+        int startTime
+        def isFind = false
 
         def getIsFind() {
             return isFind
         }
-
-        def isFind = false
 
         protected MyAdviceAdapter(int api, MethodVisitor mv, int access, String name, String desc) {
             super(api, mv, access, name, desc)
@@ -226,15 +247,15 @@ public class AsmTransform extends Transform {
         @Override
         AnnotationVisitor visitAnnotation(String desc, boolean visible) {
             //判断注解
-            if (desc.contains("XiaoBao")) {
-                println("-------MyAdviceAdapter--------" + desc)
+            if (desc.contains("RemoveMethod")) {
                 isFind = true
-            }
+                println("-------MyAdviceAdapter--------" + desc + getIsFind())
 
+            }
             return super.visitAnnotation(desc, visible)
         }
 
-        int startTime
+
         /**
          * 进入方法
          */
@@ -242,13 +263,12 @@ public class AsmTransform extends Transform {
         protected void onMethodEnter() {
             super.onMethodEnter()
 
-            if (isFind) {
-                startTime = newLocal(Type.LONG_TYPE)
-                mv.visitMethodInsn(INVOKESTATIC, "java/lang/System", "currentTimeMillis", "()J", false);
-                mv.visitVarInsn(LSTORE, startTime)
-            }
-
-
+            /*        if (isFind) {
+                        startTime = newLocal(Type.LONG_TYPE)
+                        mv.visitMethodInsn(INVOKESTATIC, "java/lang/System", "currentTimeMillis", "()J", false);
+                        mv.visitVarInsn(LSTORE, startTime)
+                    }
+        */
         }
         /**
          * 退出方法
@@ -256,6 +276,13 @@ public class AsmTransform extends Transform {
         @Override
         protected void onMethodExit(int opcode) {
             super.onMethodExit(opcode)
+        }
+
+        @Override
+        void visitEnd() {
+            super.visitEnd()
+
+
         }
     }
 }

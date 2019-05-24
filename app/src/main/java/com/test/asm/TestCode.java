@@ -4,6 +4,7 @@ import android.support.annotation.Keep;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
+import com.test.asm.annotation.RemoveMethod;
 import com.test.asm.annotation.XiaoBao;
 
 @RequiresApi
@@ -13,8 +14,9 @@ public class TestCode {
         Log.d("kang", "ams go ....");
     }
 
-    @XiaoBao
-    public void remove() {
-        Log.d("kang", "ams go ....");
+
+    public void  _start(){
+
     }
+
 }

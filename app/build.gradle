@@ -9,13 +9,36 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
+
     buildTypes {
+
         release {
+            debuggable true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+
+        }
+        debug {
+            debuggable true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+        flavorDimensions "version"
+        productFlavors {
+            asm {
+                dimension "version"
+              //  manifestPlaceholders = [UMENG_CHANNEL: "hlct"]
+            }
+
+        }
+
     }
+
+
 }
 apply plugin: 'kang-asm-test'
 dependencies {
