@@ -84,7 +84,6 @@ public class AsmTransform extends Transform {
                 // 处理完后拷到目标文件
 
                 FileUtils.copyDirectory(directoryInput.file, dest)
-
                 println("-------处理完后拷到目标文件--------")
             }
 
@@ -93,7 +92,7 @@ public class AsmTransform extends Transform {
 
     }
 
-    private boolean isFilter(String path) {
+    private static boolean isFilter(String path) {
 
         if (!path.endsWith(".class")) {
             return true
@@ -110,17 +109,17 @@ public class AsmTransform extends Transform {
     }
 
     @Override
-    public Set<QualifiedContent.ContentType> getInputTypes() {
+     Set<QualifiedContent.ContentType> getInputTypes() {
         return TransformManager.CONTENT_CLASS;
     }
 
     @Override
-    public Set<? super QualifiedContent.Scope> getScopes() {
+     Set<? super QualifiedContent.Scope> getScopes() {
         return TransformManager.SCOPE_FULL_PROJECT;
     }
 
     @Override
-    public boolean isIncremental() {
+     boolean isIncremental() {
         return true
     }
 
