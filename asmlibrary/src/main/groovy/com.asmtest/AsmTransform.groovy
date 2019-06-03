@@ -26,12 +26,12 @@ public class AsmTransform extends Transform {
     }
 
     @Override
-    public String getName() {
-        return "asm-test";
+     String getName() {
+        return "asm-test"
     }
 
     @Override
-    public void transform(TransformInvocation transformInvocation)
+     void transform(TransformInvocation transformInvocation)
             throws TransformException, InterruptedException, IOException {
         super.transform(transformInvocation);
 
@@ -177,14 +177,12 @@ public class AsmTransform extends Transform {
         @Override
         MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 
-
            /* if (name.equals("remove") || name.equals("remove2")) {
                 isFind = true
                 //返回空可移除一个方法
                 return null
             }
 */
-
             MethodVisitor methodVisitor = super.visitMethod(access, name, desc, signature, exceptions)
             MyAdviceAdapter myAdviceAdapter = new MyAdviceAdapter(Opcodes.ASM5, methodVisitor, access, name, desc)
             println("-------visitMethod--------" + name + myAdviceAdapter.getIsFind())
@@ -198,7 +196,6 @@ public class AsmTransform extends Transform {
             if (name.equals("_start")) {
                 isFieldPresent = true;
             }
-
             return super.visitField(access, name, desc, signature, value)
         }
 
