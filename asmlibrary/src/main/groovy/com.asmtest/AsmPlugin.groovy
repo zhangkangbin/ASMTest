@@ -10,8 +10,6 @@ import org.gradle.api.Project
  *
  */
 public class AsmPlugin implements Plugin<Project> {
-    public static final String EXT_NAME = 'AsmTestPlugin'
-
     @Override
     public void apply(Project project) {
         /**
@@ -22,8 +20,6 @@ public class AsmPlugin implements Plugin<Project> {
         def transformImpl = new AsmTransform()
         android.registerTransform(transformImpl)
         print("-------------------------注册transform接口6------------------------------")
-
-
 
     }
 
